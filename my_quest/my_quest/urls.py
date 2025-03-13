@@ -16,7 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from quest.views import get_questions
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/questions/', get_questions, name='get_questions'),
 ]
