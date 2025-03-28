@@ -56,7 +56,10 @@ ROOT_URLCONF = 'my_quest.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'my_quest' / 'templates'],
+        'DIRS': [
+            BASE_DIR / 'my_quest' / 'templates',
+            BASE_DIR / 'quest' / 'templates',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -111,6 +114,10 @@ LANGUAGES = [
 ]
 
 LANGUAGE_CODE = 'uk'
+
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
 
 TIME_ZONE = 'UTC'
 
