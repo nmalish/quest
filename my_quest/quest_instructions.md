@@ -55,11 +55,6 @@ The Quest System is a sequential testing platform where students must complete a
 4. Previous test results are always accessible
 5. Codes must be entered exactly as shown
 
-## Technical Requirements
-- Modern web browser
-- Stable internet connection
-- JavaScript enabled
-- Cookies enabled
 
 ## Troubleshooting
 If you encounter issues:
