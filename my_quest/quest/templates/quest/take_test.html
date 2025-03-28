@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Progress Bar -->
+    <div class="progress mb-4">
+        <div class="progress-bar" role="progressbar" 
+             style="width: {{ progress.percentage }}%"
+             aria-valuenow="{{ progress.percentage }}" 
+             aria-valuemin="0" 
+             aria-valuemax="100">
+            Question {{ progress.current }} of {{ progress.total }}
+        </div>
+    </div>
+
+    <!-- Question Card -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Question {{ progress.current }}</h5>
+            <p class="card-text">{{ current_question.description }}</p>
+            
+            {% if current_question.image %}
+                <img src="{{ current_question.image.url }}" class="img-fluid mb-3" alt="Question Image">
+            {% endif %}
+
+            <form method="post" class="mt-4">
+                {% csrf_token %}
+                <div class="list-group">
+                    {% for answer in current_question.answers.all %}
+                        <label class="list-group-item">
+                            <input class="form-check-input me-1" type="radio" 
+                                   name="answer" value="{{ answer.id }}" required>
+                            {{ answer.text }}
+                        </label>
+                    {% endfor %}
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        {% if progress.current == progress.total %}
+                            Submit Test
+                        {% else %}
+                            Next Question
+                        {% endif %}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Test Information -->
+    <div class="card mt-4">
+        <div class="card-body">
+            <h6 class="card-subtitle mb-2 text-muted">Test Information</h6>
+            <p class="card-text">
+                <strong>Test:</strong> {{ test_result.test.title }}<br>
+                <strong>Started:</strong> {{ test_result.started_at|date:"F j, Y, g:i a" }}<br>
+                {% if test_result.test.time_limit %}
+                    <strong>Time Limit:</strong> {{ test_result.test.time_limit }} minutes
+                {% endif %}
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %} 
