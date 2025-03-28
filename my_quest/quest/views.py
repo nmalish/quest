@@ -18,3 +18,7 @@ def get_questions(request):
         for q in questions
     ]
     return JsonResponse({"questions": data}, safe=False)
+
+def questions_list(request):
+    questions = Question.objects.prefetch_related('answers').all()
+    return render(request, 'quest/questions_list.html', {'questions': questions})

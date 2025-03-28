@@ -15,6 +15,11 @@ class Question(models.Model):
     def __str__(self):
         return self.description
 
+    def image_url(self):
+        if self.image:
+            return self.image.url
+        return None
+
 class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
     text = models.CharField(max_length=255)
