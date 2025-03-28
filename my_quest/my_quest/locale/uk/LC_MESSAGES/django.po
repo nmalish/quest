@@ -1,0 +1,171 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-28 15:59+0000\n"
+"PO-Revision-Date: 2024-03-28 16:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Ukrainian <uk@li.org>\n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+#: my_quest/templates/base.html:7
+msgid "Quest - Online Testing System"
+msgstr "Квест - Система онлайн тестування"
+
+#: my_quest/templates/base.html:42
+msgid "Quest"
+msgstr "Квест"
+
+#: my_quest/templates/base.html:49
+msgid "Questions List"
+msgstr "Список питань"
+
+#: my_quest/templates/base.html:52
+msgid "Tests List"
+msgstr "Список тестів"
+
+#: my_quest/templates/base.html:76
+msgid "Welcome"
+msgstr "Ласкаво просимо"
+
+#: my_quest/templates/base.html:79
+msgid "Logout"
+msgstr "Вийти"
+
+#: my_quest/templates/base.html:83 my_quest/templates/registration/login.html:4
+#: my_quest/templates/registration/login.html:12
+#: my_quest/templates/registration/login.html:29
+msgid "Login"
+msgstr "Вхід"
+
+#: my_quest/templates/base.html:110
+msgid "All rights reserved."
+msgstr "Всі права захищено."
+
+#: my_quest/templates/registration/login.html:17
+msgid "Your username and password didn't match. Please try again."
+msgstr "Ваше ім'я користувача та пароль не співпадають. Будь ласка, спробуйте ще раз."
+
+#: my_quest/templates/registration/login.html:21
+msgid "Username"
+msgstr "Ім'я користувача"
+
+#: my_quest/templates/registration/login.html:25
+msgid "Password"
+msgstr "Пароль"
+
+#: my_quest/templates/quest/test_list.html:4
+msgid "Available Tests"
+msgstr "Доступні тести"
+
+#: my_quest/templates/quest/test_list.html:15
+msgid "Questions"
+msgstr "Питання"
+
+#: my_quest/templates/quest/test_list.html:17
+msgid "Time Limit"
+msgstr "Обмеження часу"
+
+#: my_quest/templates/quest/test_list.html:18
+msgid "minutes"
+msgstr "хвилин"
+
+#: my_quest/templates/quest/test_list.html:20
+msgid "Start Test"
+msgstr "Почати тест"
+
+#: my_quest/templates/quest/test_list.html:24
+msgid "No tests are currently available."
+msgstr "Наразі немає доступних тестів."
+
+#: my_quest/templates/quest/take_test.html:8
+msgid "Question"
+msgstr "Питання"
+
+#: my_quest/templates/quest/take_test.html:9
+msgid "of"
+msgstr "з"
+
+#: my_quest/templates/quest/take_test.html:19
+msgid "Question Image"
+msgstr "Зображення питання"
+
+#: my_quest/templates/quest/take_test.html:35
+msgid "Submit Test"
+msgstr "Завершити тест"
+
+#: my_quest/templates/quest/take_test.html:37
+msgid "Next Question"
+msgstr "Наступне питання"
+
+#: my_quest/templates/quest/take_test.html:42
+msgid "Test Information"
+msgstr "Інформація про тест"
+
+#: my_quest/templates/quest/take_test.html:44
+msgid "Test"
+msgstr "Тест"
+
+#: my_quest/templates/quest/take_test.html:45
+msgid "Started"
+msgstr "Почато"
+
+#: my_quest/templates/quest/take_test.html:46
+msgid "Completed"
+msgstr "Завершено"
+
+#: my_quest/templates/quest/take_test.html:47
+msgid "Status"
+msgstr "Статус"
+
+#: my_quest/templates/quest/test_result.html:4
+msgid "Test Results"
+msgstr "Результати тесту"
+
+#: my_quest/templates/quest/test_result.html:8
+msgid "Score"
+msgstr "Оцінка"
+
+#: my_quest/templates/quest/test_result.html:15
+msgid "N/A"
+msgstr "Н/Д"
+
+#: my_quest/templates/quest/test_result.html:19
+msgid "Question Review"
+msgstr "Перегляд питань"
+
+#: my_quest/templates/quest/test_result.html:35
+msgid "Your Answer"
+msgstr "Ваша відповідь"
+
+#: my_quest/templates/quest/test_result.html:38
+msgid "Correct Answer"
+msgstr "Правильна відповідь"
+
+#: my_quest/templates/quest/test_result.html:45
+msgid "Back to Tests"
+msgstr "Назад до тестів"
+
+#: my_quest/templates/quest/questions_list.html:4
+msgid "Answers"
+msgstr "Відповіді"
+
+#: my_quest/templates/quest/questions_list.html:15
+msgid "Question image"
+msgstr "Зображення питання"
+
+#: my_quest/templates/quest/questions_list.html:20
+msgid "Correct"
+msgstr "Правильно"

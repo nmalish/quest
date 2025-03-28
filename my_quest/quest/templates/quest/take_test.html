@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block content %}
 <div class="container mt-4">
@@ -9,18 +10,18 @@
              aria-valuenow="{{ progress.percentage }}" 
              aria-valuemin="0" 
              aria-valuemax="100">
-            Question {{ progress.current }} of {{ progress.total }}
+            {% trans "Question" %} {{ progress.current }} {% trans "of" %} {{ progress.total }}
         </div>
     </div>
 
     <!-- Question Card -->
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">Question {{ progress.current }}</h5>
+            <h5 class="card-title">{% trans "Question" %} {{ progress.current }}</h5>
             <p class="card-text">{{ current_question.description }}</p>
             
             {% if current_question.image %}
-                <img src="{{ current_question.image.url }}" class="img-fluid mb-3" alt="Question Image">
+                <img src="{{ current_question.image.url }}" class="img-fluid mb-3" alt="{% trans 'Question Image' %}">
             {% endif %}
 
             <form method="post" class="mt-4">
@@ -38,9 +39,9 @@
                 <div class="mt-4">
                     <button type="submit" class="btn btn-primary">
                         {% if progress.current == progress.total %}
-                            Submit Test
+                            {% trans "Submit Test" %}
                         {% else %}
-                            Next Question
+                            {% trans "Next Question" %}
                         {% endif %}
                     </button>
                 </div>
@@ -51,12 +52,12 @@
     <!-- Test Information -->
     <div class="card mt-4">
         <div class="card-body">
-            <h6 class="card-subtitle mb-2 text-muted">Test Information</h6>
+            <h6 class="card-subtitle mb-2 text-muted">{% trans "Test Information" %}</h6>
             <p class="card-text">
-                <strong>Test:</strong> {{ test_result.test.title }}<br>
-                <strong>Started:</strong> {{ test_result.started_at|date:"F j, Y, g:i a" }}<br>
+                <strong>{% trans "Test" %}:</strong> {{ test_result.test.title }}<br>
+                <strong>{% trans "Started" %}:</strong> {{ test_result.started_at|date:"F j, Y, g:i a" }}<br>
                 {% if test_result.test.time_limit %}
-                    <strong>Time Limit:</strong> {{ test_result.test.time_limit }} minutes
+                    <strong>{% trans "Time Limit" %}:</strong> {{ test_result.test.time_limit }} {% trans "minutes" %}
                 {% endif %}
             </p>
         </div>

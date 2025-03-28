@@ -19,16 +19,22 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
+from django.conf.urls.i18n import i18n_patterns
 from quest.views import get_questions, questions_list
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/questions/', get_questions, name='get_questions'),
     path('questions/', questions_list, name='questions_list'),
-    path('', include('quest.urls')),
+    path('i18n/', include('django.conf.urls.i18n')),
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
 ]
+
+# Add i18n patterns for the main app URLs
+urlpatterns += i18n_patterns(
+    path('', include('quest.urls')),
+)
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

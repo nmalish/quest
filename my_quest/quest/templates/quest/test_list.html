@@ -1,8 +1,9 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block content %}
 <div class="container mt-4">
-    <h1>Available Tests</h1>
+    <h1>{% trans "Available Tests" %}</h1>
     
     {% if tests %}
         <div class="row">
@@ -14,13 +15,13 @@
                             <p class="card-text">{{ test.description }}</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <small class="text-muted">
-                                    Questions: {{ test.get_total_questions }}
+                                    {% trans "Questions" %}: {{ test.get_total_questions }}
                                     {% if test.time_limit %}
-                                        | Time Limit: {{ test.time_limit }} minutes
+                                        | {% trans "Time Limit" %}: {{ test.time_limit }} {% trans "minutes" %}
                                     {% endif %}
                                 </small>
                                 <a href="{% url 'start_test' test.id %}" class="btn btn-primary">
-                                    Start Test
+                                    {% trans "Start Test" %}
                                 </a>
                             </div>
                         </div>
@@ -30,7 +31,7 @@
         </div>
     {% else %}
         <div class="alert alert-info">
-            No tests are currently available.
+            {% trans "No tests are currently available." %}
         </div>
     {% endif %}
 </div>
