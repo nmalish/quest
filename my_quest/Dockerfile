@@ -22,8 +22,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Create necessary directories with proper permissions
-RUN mkdir -p /app/media /app/static /app/locale && \
-    chmod -R 755 /app/media /app/static /app/locale
+RUN mkdir -p /app/media /app/static /app/staticfiles /app/locale /app/quest/static && \
+    chmod -R 755 /app/media /app/static /app/staticfiles /app/locale /app/quest/static
 
 # Create a non-root user
 RUN useradd -m appuser && \

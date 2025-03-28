@@ -9,6 +9,8 @@ services:
       - ./media:/app/media
       - ./db.sqlite3:/app/db.sqlite3
       - ./locale:/app/locale
+      - ./staticfiles:/app/staticfiles
+      - ./quest/static:/app/quest/static
     environment:
       - DJANGO_SETTINGS_MODULE=my_quest.settings
       - DEBUG=1
