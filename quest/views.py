@@ -7,6 +7,7 @@ from .models import Test, TestResult, QuestionResponse, Question, Answer
 from django.db.models import Count
 from django.contrib import messages
 
+@login_required
 def get_questions(request):
     questions = Question.objects.prefetch_related('answers').all()
     data = [
@@ -24,6 +25,7 @@ def get_questions(request):
     ]
     return JsonResponse({"questions": data}, safe=False)
 
+@login_required
 def questions_list(request):
     questions = Question.objects.prefetch_related('answers').all()
     return render(request, 'quest/questions_list.html', {'questions': questions})
