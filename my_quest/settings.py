@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-lj6hwo%q0ee_!i6i4p=6u9b)lkmo-nf4&6v(^s229q^xu5+5%3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [ '*' ]
 
 
 # Application definition
@@ -52,6 +52,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'my_quest.urls'
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://quest.home.nmalish.com",
+]
 
 TEMPLATES = [
     {
