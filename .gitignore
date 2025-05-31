@@ -86,8 +86,24 @@ __pycache__/*
 local_settings.py
 
 .env
+.env.*
 db.sqlite3
+
+*.sqlite3
 
 **/__pycache__/*
 
 my_quest/staticfiles*
+
+media/
+staticfiles/
+static/
+
+.idea/
+.vscode/
+*.swp
+*.swo
+
+CLAUDE.md
+
+.cursorrules
