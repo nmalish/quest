@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load quest_extras %}
+
+{% block content %}
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'quest_sequence_list' %}">{% trans "Quest Sequences" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'quest_sequence_detail' quest.sequence.id %}">{{ quest.sequence.title }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'quest_detail' quest.id %}">{{ quest.title }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Test" %}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Progress Bar -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="mb-0">{{ quest.test.title }}</h5>
+                        <span class="badge badge-primary">
+                            {% trans "Question" %} {{ progress.current }}/{{ progress.total }}
+                        </span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar" 
+                             role="progressbar" 
+                             style="width: {{ progress.percentage }}%"
+                             aria-valuenow="{{ progress.percentage }}" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100">
+                            {{ progress.percentage }}%
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h4><i class="fas fa-question-circle"></i> {% trans "Question" %} {{ progress.current }}</h4>
+                </div>
+                <div class="card-body">
+                    {% if current_question.image %}
+                        <div class="text-center mb-3">
+                            <img src="{{ current_question.image.url }}" 
+                                 alt="Question Image" 
+                                 class="img-fluid" 
+                                 style="max-height: 300px;">
+                        </div>
+                    {% endif %}
+                    
+                    <h5 class="question-text">{{ current_question.description }}</h5>
+                    
+                    <form method="post" class="mt-4">
+                        {% csrf_token %}
+                        <div class="answer-options">
+                            {% for answer in current_question.answers.all %}
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" 
+                                           type="radio" 
+                                           name="answer" 
+                                           id="answer{{ answer.id }}" 
+                                           value="{{ answer.id }}"
+                                           required>
+                                    <label class="form-check-label answer-label" for="answer{{ answer.id }}">
+                                        {{ answer.text }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-arrow-right"></i> 
+                                {% if progress.current == total_questions %}
+                                    {% trans "Complete Test" %}
+                                {% else %}
+                                    {% trans "Next Question" %}
+                                {% endif %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <!-- Live Code Progress -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-key"></i> {% trans "Code Progress" %}</h5>
+                </div>
+                <div class="card-body text-center">
+                    <div class="code-display mb-3" style="font-family: 'Courier New', monospace; font-size: 1.5em; letter-spacing: 3px; padding: 15px; background-color: #f8f9fa; border-radius: 8px;">
+                        {{ revealed_code }}
+                    </div>
+                    
+                    <div class="progress mb-2" style="height: 8px;">
+                        {% with revealed_count=quest_progress.revealed_letters|length total_count=quest.code|length %}
+                            {% with progress_percent=revealed_count|div:total_count|mul:100 %}
+                            <div class="progress-bar bg-info" 
+                                 role="progressbar" 
+                                 style="width: {{ progress_percent }}%">
+                            </div>
+                            {% endwith %}
+                        {% endwith %}
+                    </div>
+                    
+                    <small class="text-muted">
+                        {{ quest_progress.revealed_letters|length }}/{{ quest.code|length }} {% trans "letters revealed" %}
+                    </small>
+                </div>
+            </div>
+
+            <!-- Answer Stats -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-chart-bar"></i> {% trans "Your Performance" %}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <h3 class="text-success">{{ quest_progress.correct_answers }}</h3>
+                            <small class="text-muted">{% trans "Correct" %}</small>
+                        </div>
+                        <div class="col-6">
+                            <h3 class="text-danger">{{ quest_progress.total_answers|sub:quest_progress.correct_answers }}</h3>
+                            <small class="text-muted">{% trans "Incorrect" %}</small>
+                        </div>
+                    </div>
+                    
+                    {% if quest_progress.total_answers > 0 %}
+                        <div class="mt-3">
+                            {% with accuracy=quest_progress.correct_answers|div:quest_progress.total_answers|mul:100 %}
+                                <div class="text-center">
+                                    <strong>{{ accuracy|floatformat:1 }}%</strong>
+                                    <br><small class="text-muted">{% trans "Accuracy" %}</small>
+                                </div>
+                            {% endwith %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Quick Tips -->
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-lightbulb"></i> {% trans "Tips" %}</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled small">
+                        <li class="mb-2">
+                            <i class="fas fa-plus text-success"></i>
+                            {% trans "Correct answers reveal letters" %}
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-minus text-danger"></i>
+                            {% trans "Wrong answers hide letters" %}
+                        </li>
+                        <li>
+                            <i class="fas fa-target text-info"></i>
+                            {% trans "Think carefully before answering" %}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

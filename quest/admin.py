@@ -1,5 +1,8 @@
 from django.contrib import admin
-from .models import Question, Answer, Test, TestResult, QuestionResponse
+from .models import (
+    Question, Answer, Test, TestResult, QuestionResponse,
+    QuestSequence, Quest, QuestProgress, SequenceProgress
+)
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
@@ -32,3 +35,31 @@ class QuestionResponseAdmin(admin.ModelAdmin):
     list_filter = ('is_correct', 'test_result__test', 'test_result__student')
     search_fields = ('test_result__student__username', 'question__description')
     readonly_fields = ('submitted_at',)
+
+# Register the Quest Sequence models
+@admin.register(QuestSequence)
+class QuestSequenceAdmin(admin.ModelAdmin):
+    list_display = ['title', 'is_active', 'created_at']
+    list_filter = ['is_active', 'created_at']
+    search_fields = ['title', 'description']
+
+@admin.register(Quest)
+class QuestAdmin(admin.ModelAdmin):
+    list_display = ['title', 'sequence', 'order', 'code', 'created_at']
+    list_filter = ['sequence', 'created_at']
+    search_fields = ['title', 'description', 'code']
+    ordering = ['sequence', 'order']
+
+@admin.register(QuestProgress)
+class QuestProgressAdmin(admin.ModelAdmin):
+    list_display = ['student', 'quest', 'is_completed', 'code_guessed', 'correct_answers', 'total_answers']
+    list_filter = ['is_completed', 'code_guessed', 'quest__sequence']
+    search_fields = ['student__username', 'quest__title']
+    readonly_fields = ['revealed_letters']
+
+@admin.register(SequenceProgress)
+class SequenceProgressAdmin(admin.ModelAdmin):
+    list_display = ['student', 'sequence', 'current_quest', 'is_completed', 'updated_at']
+    list_filter = ['is_completed', 'sequence']
+    search_fields = ['student__username', 'sequence__title']
+    readonly_fields = ['completed_quests']

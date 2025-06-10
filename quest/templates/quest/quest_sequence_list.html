@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load quest_extras %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1><i class="fas fa-map-marked-alt"></i> {% trans "Quest Sequences" %}</h1>
+    <p class="lead">{% trans "Choose a quest sequence to begin your coding adventure!" %}</p>
+    
+    {% if sequences %}
+        <div class="row">
+            {% for sequence in sequences %}
+                <div class="col-md-6 mb-4">
+                    <div class="card quest-sequence-card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-compass"></i> {{ sequence.title }}
+                            </h5>
+                            <p class="card-text">{{ sequence.description }}</p>
+                            
+                            {% with progress=user_progress|lookup:sequence.id %}
+                                <div class="quest-progress mb-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">
+                                            <i class="fas fa-tasks"></i>
+                                            {% trans "Quests" %}: {{ sequence.quests.count }}
+                                        </small>
+                                        {% if progress.is_completed %}
+                                            <span class="badge badge-success">
+                                                <i class="fas fa-trophy"></i> {% trans "Completed" %}
+                                            </span>
+                                        {% elif progress.current_quest %}
+                                            <span class="badge badge-primary">
+                                                <i class="fas fa-play"></i> {% trans "In Progress" %}
+                                            </span>
+                                        {% else %}
+                                            <span class="badge badge-secondary">
+                                                <i class="fas fa-lock"></i> {% trans "Not Started" %}
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    {% if progress.completed_quests %}
+                                        <div class="progress mt-2" style="height: 8px;">
+                                            {% with completion_percent=progress.completed_quests|length|div:sequence.quests.count|mul:100 %}
+                                                <div class="progress-bar bg-success" 
+                                                     role="progressbar" 
+                                                     style="width: {{ completion_percent }}%"
+                                                     aria-valuenow="{{ completion_percent }}" 
+                                                     aria-valuemin="0" 
+                                                     aria-valuemax="100">
+                                                    {{ completion_percent|floatformat:0 }}%
+                                                </div>
+                                            {% endwith %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endwith %}
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    {% trans "Created" %}: {{ sequence.created_at|date:"M d, Y" }}
+                                </small>
+                                <a href="{% url 'quest_sequence_detail' sequence.id %}" class="btn btn-primary">
+                                    <i class="fas fa-arrow-right"></i> {% trans "Enter Quest" %}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            {% trans "No quest sequences are currently available." %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 

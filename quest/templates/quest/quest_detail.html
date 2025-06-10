@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'quest_sequence_list' %}">{% trans "Quest Sequences" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'quest_sequence_detail' quest.sequence.id %}">{{ quest.sequence.title }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ quest.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-8">
+            <h1><i class="fas fa-flag-checkered"></i> {{ quest.title }}</h1>
+            <p class="lead">{{ quest.description }}</p>
+            
+            <!-- Code Progress Section -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4><i class="fas fa-key"></i> {% trans "Code Progress" %}</h4>
+                </div>
+                <div class="card-body text-center">
+                    <div class="code-display-large mb-3">
+                        {% if quest_progress.is_completed or quest_progress.code_guessed %}
+                            <span class="text-success font-weight-bold">{{ quest.code }}</span>
+                            {% if quest_progress.code_guessed %}
+                                <div class="mt-2">
+                                    <span class="badge badge-success badge-lg">
+                                        <i class="fas fa-key"></i> {% trans "Code Cracked!" %}
+                                    </span>
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <span class="font-weight-bold">{{ revealed_code }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    {% if not quest_progress.is_completed and not quest_progress.code_guessed %}
+                        <div class="progress mb-3" style="height: 8px;">
+                            {% with revealed_count=quest_progress.revealed_letters|length total_count=quest.code|length %}
+                                {% with progress_percent=revealed_count|div:total_count|mul:100 %}
+                                <div class="progress-bar bg-info" 
+                                     role="progressbar" 
+                                     style="width: {{ progress_percent }}%">
+                                </div>
+                                {% endwith %}
+                            {% endwith %}
+                        </div>
+                        <small class="text-muted">
+                            {{ quest_progress.revealed_letters|length }}/{{ quest.code|length }} {% trans "letters revealed" %}
+                        </small>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Test Section -->
+            <div class="card">
+                <div class="card-header">
+                    <h4><i class="fas fa-question-circle"></i> {{ quest.test.title }}</h4>
+                </div>
+                <div class="card-body">
+                    <p>{{ quest.test.description }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <small class="text-muted">
+                                <i class="fas fa-list"></i> {% trans "Questions" %}: {{ quest.test.get_total_questions }}
+                                {% if quest.test.time_limit %}
+                                    | <i class="fas fa-clock"></i> {% trans "Time Limit" %}: {{ quest.test.time_limit }} {% trans "minutes" %}
+                                {% endif %}
+                            </small>
+                        </div>
+                        {% if not quest_progress.is_completed %}
+                            <a href="{% url 'start_quest_test' quest.id %}" class="btn btn-primary">
+                                <i class="fas fa-play"></i> {% trans "Start Test" %}
+                            </a>
+                        {% else %}
+                            <span class="badge badge-success">
+                                <i class="fas fa-check"></i> {% trans "Completed" %}
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <!-- Code Guessing -->
+            {% if can_guess and not quest_progress.is_completed and not quest_progress.code_guessed %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="fas fa-search"></i> {% trans "Guess the Code" %}</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="codeGuessForm">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="guessed_code">{% trans "Enter your guess" %}:</label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="guessed_code" 
+                                       name="guessed_code" 
+                                       placeholder="{% trans 'Enter code...' %}"
+                                       maxlength="{{ quest.code|length }}"
+                                       style="font-family: 'Courier New', monospace; letter-spacing: 2px; text-transform: uppercase;">
+                            </div>
+                            <button type="submit" class="btn btn-warning btn-block">
+                                <i class="fas fa-key"></i> {% trans "Guess Code" %}
+                            </button>
+                        </form>
+                        <small class="text-muted mt-2">
+                            <i class="fas fa-info-circle"></i>
+                            {% trans "Guess correctly to unlock the next quest immediately!" %}
+                        </small>
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Progress Stats -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-chart-bar"></i> {% trans "Your Stats" %}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <h4 class="text-success">{{ quest_progress.correct_answers }}</h4>
+                            <small class="text-muted">{% trans "Correct" %}</small>
+                        </div>
+                        <div class="col-6">
+                            <h4 class="text-danger">{{ quest_progress.total_answers|sub:quest_progress.correct_answers }}</h4>
+                            <small class="text-muted">{% trans "Incorrect" %}</small>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="text-center">
+                        <h4>{{ quest_progress.revealed_letters|length }}/{{ quest.code|length }}</h4>
+                        <small class="text-muted">{% trans "Letters Revealed" %}</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quest Tips -->
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-lightbulb"></i> {% trans "How It Works" %}</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled small">
+                        <li class="mb-2">
+                            <i class="fas fa-plus-circle text-success"></i>
+                            {% trans "Each correct answer reveals one letter" %}
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-minus-circle text-danger"></i>
+                            {% trans "Each wrong answer hides one revealed letter" %}
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-key text-warning"></i>
+                            {% trans "Guess the complete code anytime" %}
+                        </li>
+                        <li>
+                            <i class="fas fa-unlock text-info"></i>
+                            {% trans "Unlock the next quest by completing this one" %}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('codeGuessForm')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const guessedCode = formData.get('guessed_code');
+    
+    if (!guessedCode.trim()) {
+        alert('{% trans "Please enter a code guess" %}');
+        return;
+    }
+    
+    fetch('{% url "guess_code" quest.id %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            location.reload();
+        } else {
+            alert(data.message);
+            document.getElementById('guessed_code').value = '';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('{% trans "An error occurred. Please try again." %}');
+    });
+});
+</script>
+{% endblock %} 

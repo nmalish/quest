@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load quest_extras %}
+
+{% block content %}
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'quest_sequence_list' %}">{% trans "Quest Sequences" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ sequence.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-8">
+            <h1><i class="fas fa-compass"></i> {{ sequence.title }}</h1>
+            <p class="lead">{{ sequence.description }}</p>
+            
+            <!-- Quest List -->
+            <h3><i class="fas fa-tasks"></i> {% trans "Quests" %}</h3>
+            <div class="quest-list">
+                {% for quest in all_quests %}
+                    {% with progress=quest_progress|lookup:quest.id %}
+                        <div class="card mb-3 quest-card {% if quest in unlocked_quests %}unlocked{% else %}locked{% endif %}">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-md-1">
+                                        <div class="quest-number">
+                                            {{ quest.order|add:1 }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <h5 class="card-title mb-1">
+                                            {% if quest not in unlocked_quests %}
+                                                <i class="fas fa-lock text-muted"></i>
+                                            {% elif progress.is_completed %}
+                                                <i class="fas fa-check-circle text-success"></i>
+                                            {% else %}
+                                                <i class="fas fa-play-circle text-primary"></i>
+                                            {% endif %}
+                                            {{ quest.title }}
+                                        </h5>
+                                        <p class="card-text text-muted mb-1">{{ quest.description }}</p>
+                                        
+                                        <!-- Code Progress -->
+                                        {% if quest in unlocked_quests %}
+                                            <div class="code-progress mt-2">
+                                                <small class="text-muted">{% trans "Code" %}:</small>
+                                                <code class="code-display">
+                                                    {% if progress.is_completed or progress.code_guessed %}
+                                                        {{ quest.code }}
+                                                    {% else %}
+                                                        {{ progress.get_revealed_code }}
+                                                    {% endif %}
+                                                </code>
+                                                {% if progress.is_completed %}
+                                                    <span class="badge badge-success ml-2">
+                                                        <i class="fas fa-trophy"></i> {% trans "Completed" %}
+                                                    </span>
+                                                {% elif progress.code_guessed %}
+                                                    <span class="badge badge-info ml-2">
+                                                        <i class="fas fa-key"></i> {% trans "Code Cracked" %}
+                                                    </span>
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-4 text-right">
+                                        {% if quest in unlocked_quests %}
+                                            {% if not progress.is_completed and not progress.code_guessed %}
+                                                <a href="{% url 'quest_detail' quest.id %}" class="btn btn-primary">
+                                                    <i class="fas fa-arrow-right"></i> {% trans "Start Quest" %}
+                                                </a>
+                                            {% else %}
+                                                <a href="{% url 'quest_detail' quest.id %}" class="btn btn-outline-success">
+                                                    <i class="fas fa-eye"></i> {% trans "Review" %}
+                                                </a>
+                                            {% endif %}
+                                        {% else %}
+                                            <button class="btn btn-secondary" disabled>
+                                                <i class="fas fa-lock"></i> {% trans "Locked" %}
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endwith %}
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <!-- Progress Summary -->
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-chart-line"></i> {% trans "Progress Summary" %}</h5>
+                </div>
+                <div class="card-body">
+                    {% with completed_count=sequence_progress.completed_quests|length total_count=all_quests|length %}
+                        <div class="text-center mb-3">
+                            <h2 class="display-4">{{ completed_count }}/{{ total_count }}</h2>
+                            <p class="text-muted">{% trans "Quests Completed" %}</p>
+                        </div>
+                        
+                        <div class="progress mb-3" style="height: 20px;">
+                            {% with completion_percent=completed_count|div:total_count|mul:100 %}
+                                <div class="progress-bar bg-success" 
+                                     role="progressbar" 
+                                     style="width: {{ completion_percent }}%"
+                                     aria-valuenow="{{ completion_percent }}" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="100">
+                                    {{ completion_percent|floatformat:0 }}%
+                                </div>
+                            {% endwith %}
+                        </div>
+                        
+                        {% if sequence_progress.is_completed %}
+                            <div class="alert alert-success text-center">
+                                <i class="fas fa-trophy"></i>
+                                <strong>{% trans "Sequence Completed!" %}</strong>
+                            </div>
+                        {% elif sequence_progress.current_quest %}
+                            <div class="alert alert-info text-center">
+                                <i class="fas fa-play"></i>
+                                <strong>{% trans "Current Quest" %}:</strong><br>
+                                {{ sequence_progress.current_quest.title }}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+            
+            <!-- Quest Tips -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-lightbulb"></i> {% trans "Quest Tips" %}</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success"></i> {% trans "Correct answers reveal code letters" %}</li>
+                        <li><i class="fas fa-times text-danger"></i> {% trans "Wrong answers hide revealed letters" %}</li>
+                        <li><i class="fas fa-key text-info"></i> {% trans "Guess the code anytime to unlock next quest" %}</li>
+                        <li><i class="fas fa-lock-open text-warning"></i> {% trans "Complete quests in order" %}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.quest-card.locked {
+    opacity: 0.6;
+    background-color: #f8f9fa;
+}
+
+.quest-card.unlocked {
+    border-left: 4px solid #007bff;
+}
+
+.quest-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #007bff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.locked .quest-number {
+    background-color: #6c757d;
+}
+
+.code-display {
+    background-color: #f8f9fa;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 1.1em;
+    letter-spacing: 2px;
+}
+</style>
+{% endblock %} 

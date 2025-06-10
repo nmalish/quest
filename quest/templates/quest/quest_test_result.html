@@ -1,0 +1,284 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load quest_extras %}
+
+{% block content %}
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'quest_sequence_list' %}">{% trans "Quest Sequences" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'quest_sequence_detail' quest.sequence.id %}">{{ quest.sequence.title }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'quest_detail' quest.id %}">{{ quest.title }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Results" %}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Test Results Header -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    {% if test_result.score >= 70 %}
+                        <h3 class="text-success"><i class="fas fa-check-circle"></i> {% trans "Test Completed!" %}</h3>
+                    {% elif test_result.score >= 50 %}
+                        <h3 class="text-warning"><i class="fas fa-exclamation-circle"></i> {% trans "Test Completed" %}</h3>
+                    {% else %}
+                        <h3 class="text-danger"><i class="fas fa-times-circle"></i> {% trans "Test Completed" %}</h3>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <h2 class="display-4 
+                                {% if test_result.score >= 70 %}text-success
+                                {% elif test_result.score >= 50 %}text-warning
+                                {% else %}text-danger{% endif %}">
+                                {{ test_result.score|floatformat:0 }}%
+                            </h2>
+                            <p class="text-muted">{% trans "Score" %}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h2 class="display-4 text-info">{{ quest_progress.correct_answers }}</h2>
+                            <p class="text-muted">{% trans "Correct" %}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h2 class="display-4 text-secondary">{{ quest_progress.total_answers|sub:quest_progress.correct_answers }}</h2>
+                            <p class="text-muted">{% trans "Incorrect" %}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h2 class="display-4 text-primary">{{ quest_progress.revealed_letters|length }}</h2>
+                            <p class="text-muted">{% trans "Letters Revealed" %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current Code Status -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4><i class="fas fa-key"></i> {% trans "Code Status" %}</h4>
+                </div>
+                <div class="card-body text-center">
+                    <div class="code-display-large mb-3">
+                        {% if quest_progress.is_completed or quest_progress.code_guessed %}
+                            <span class="text-success font-weight-bold">{{ quest.code }}</span>
+                        {% else %}
+                            {{ revealed_code }}
+                        {% endif %}
+                    </div>
+                    
+                    {% if quest_progress.is_completed %}
+                        <div class="alert alert-success">
+                            <i class="fas fa-trophy"></i>
+                            <strong>{% trans "Quest Completed!" %}</strong>
+                            {% trans "You've revealed the complete code through your answers." %}
+                        </div>
+                    {% elif quest_progress.code_guessed %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-key"></i>
+                            <strong>{% trans "Code Cracked!" %}</strong>
+                            {% trans "You successfully guessed the code." %}
+                        </div>
+                    {% else %}
+                        <div class="progress mb-3">
+                            {% with revealed_count=quest_progress.revealed_letters|length total_count=quest.code|length %}
+                                {% with progress_percent=revealed_count|div:total_count|mul:100 %}
+                                <div class="progress-bar bg-info" 
+                                     role="progressbar" 
+                                     style="width: {{ progress_percent }}%">
+                                    {{ progress_percent|floatformat:0 }}%
+                                </div>
+                                {% endwith %}
+                            {% endwith %}
+                        </div>
+                        <p class="text-muted">
+                            {{ quest_progress.revealed_letters|length }}/{{ quest.code|length }} {% trans "letters revealed" %}
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Detailed Results -->
+            <div class="card">
+                <div class="card-header">
+                    <h4><i class="fas fa-list-alt"></i> {% trans "Answer Review" %}</h4>
+                </div>
+                <div class="card-body">
+                    {% for response in responses %}
+                        <div class="answer-review mb-3 p-3 border rounded 
+                            {% if response.is_correct %}border-success bg-light-success
+                            {% else %}border-danger bg-light-danger{% endif %}">
+                            <div class="row">
+                                <div class="col-md-1">
+                                    {% if response.is_correct %}
+                                        <i class="fas fa-check-circle text-success fa-2x"></i>
+                                    {% else %}
+                                        <i class="fas fa-times-circle text-danger fa-2x"></i>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-11">
+                                    <h6 class="font-weight-bold">{{ response.question.description }}</h6>
+                                    <p class="mb-1">
+                                        <strong>{% trans "Your answer" %}:</strong> 
+                                        <span class="{% if response.is_correct %}text-success{% else %}text-danger{% endif %}">
+                                            {{ response.selected_answer.text }}
+                                        </span>
+                                    </p>
+                                    {% if not response.is_correct %}
+                                        {% for answer in response.question.answers.all %}
+                                            {% if answer.is_correct %}
+                                                <p class="mb-0">
+                                                    <strong>{% trans "Correct answer" %}:</strong> 
+                                                    <span class="text-success">{{ answer.text }}</span>
+                                                </p>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <!-- Code Guessing (if available) -->
+            {% if can_guess_code %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="fas fa-search"></i> {% trans "Guess the Code" %}</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">{% trans "Think you know the code? Guess it now!" %}</p>
+                        <form id="codeGuessForm">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="guessed_code" 
+                                       name="guessed_code" 
+                                       placeholder="{% trans 'Enter code...' %}"
+                                       maxlength="{{ quest.code|length }}">
+                            </div>
+                            <button type="submit" class="btn btn-warning btn-block">
+                                <i class="fas fa-key"></i> {% trans "Guess Code" %}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Next Actions -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-compass"></i> {% trans "What's Next?" %}</h5>
+                </div>
+                <div class="card-body">
+                    {% if quest_progress.is_completed or quest_progress.code_guessed %}
+                        {% with next_quest=quest.get_next_quest %}
+                            {% if next_quest %}
+                                <div class="alert alert-success">
+                                    <i class="fas fa-unlock"></i>
+                                    <strong>{% trans "Next Quest Unlocked!" %}</strong>
+                                </div>
+                                <a href="{% url 'quest_detail' next_quest.id %}" class="btn btn-success btn-block">
+                                    <i class="fas fa-arrow-right"></i> {% trans "Continue to Next Quest" %}
+                                </a>
+                            {% else %}
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-trophy"></i>
+                                    <strong>{% trans "Sequence Complete!" %}</strong>
+                                </div>
+                                <a href="{% url 'quest_sequence_list' %}" class="btn btn-primary btn-block">
+                                    <i class="fas fa-home"></i> {% trans "Back to Sequences" %}
+                                </a>
+                            {% endif %}
+                        {% endwith %}
+                    {% else %}
+                        <p class="text-muted">{% trans "Complete this quest to unlock the next one." %}</p>
+                        <a href="{% url 'start_quest_test' quest.id %}" class="btn btn-primary btn-block">
+                            <i class="fas fa-redo"></i> {% trans "Retake Test" %}
+                        </a>
+                    {% endif %}
+                    
+                    <a href="{% url 'quest_sequence_detail' quest.sequence.id %}" class="btn btn-outline-secondary btn-block mt-2">
+                        <i class="fas fa-arrow-left"></i> {% trans "Back to Sequence" %}
+                    </a>
+                </div>
+            </div>
+
+            <!-- Performance Summary -->
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-chart-pie"></i> {% trans "Performance Summary" %}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center">
+                        {% if quest_progress.total_answers > 0 %}
+                            {% with accuracy=quest_progress.correct_answers|div:quest_progress.total_answers|mul:100 %}
+                                <h3 class="
+                                    {% if accuracy >= 80 %}text-success
+                                    {% elif accuracy >= 60 %}text-warning
+                                    {% else %}text-danger{% endif %}">
+                                    {{ accuracy|floatformat:1 }}%
+                                </h3>
+                                <p class="text-muted">{% trans "Accuracy Rate" %}</p>
+                            {% endwith %}
+                        {% endif %}
+                        
+                        <hr>
+                        
+                        <div class="row">
+                            <div class="col-6">
+                                <strong>{{ quest_progress.revealed_letters|length }}</strong>
+                                <br><small class="text-muted">{% trans "Letters" %}</small>
+                            </div>
+                            <div class="col-6">
+                                <strong>{{ quest.code|length }}</strong>
+                                <br><small class="text-muted">{% trans "Total" %}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('codeGuessForm')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const guessedCode = formData.get('guessed_code');
+    
+    if (!guessedCode.trim()) {
+        alert('{% trans "Please enter a code guess" %}');
+        return;
+    }
+    
+    fetch('{% url "guess_code" quest.id %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            location.reload();
+        } else {
+            alert(data.message);
+            document.getElementById('guessed_code').value = '';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('{% trans "An error occurred. Please try again." %}');
+    });
+});
+</script>
+{% endblock %} 
