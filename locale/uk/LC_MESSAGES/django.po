@@ -368,3 +368,12 @@ msgstr "Поточний квест"
 
 msgid "Code"
 msgstr "Код"
+
+msgid "letters revealed"
+msgstr "літер відкрито"
+
+msgid "Code Status"
+msgstr "Статус коду"
+
+msgid "Answer Review"
+msgstr "Перегляд відповідей"

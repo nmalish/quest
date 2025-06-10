@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load quest_extras %}
 
 {% block content %}
 <div class="container mt-4">
@@ -39,12 +40,21 @@
                     
                     {% if not quest_progress.is_completed and not quest_progress.code_guessed %}
                         <div class="progress mb-3" style="height: 8px;">
-                            {% with revealed_count=quest_progress.revealed_letters|length total_count=quest.code|length %}
-                                {% with progress_percent=revealed_count|div:total_count|mul:100 %}
-                                <div class="progress-bar bg-info" 
-                                     role="progressbar" 
-                                     style="width: {{ progress_percent }}%">
-                                </div>
+                            {% with revealed_count=quest_progress.revealed_letters|length %}
+                                {% with total_count=quest.code|length %}
+                                    {% if total_count > 0 %}
+                                        {% with progress_percent=revealed_count|div:total_count|mul:100 %}
+                                        <div class="progress-bar bg-info" 
+                                             role="progressbar" 
+                                             style="width: {{ progress_percent }}%">
+                                        </div>
+                                        {% endwith %}
+                                    {% else %}
+                                        <div class="progress-bar bg-info" 
+                                             role="progressbar" 
+                                             style="width: 0%">
+                                        </div>
+                                    {% endif %}
                                 {% endwith %}
                             {% endwith %}
                         </div>
