@@ -170,4 +170,23 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Look for Django success messages
+    var alerts = document.querySelectorAll('.alert-success');
+    if (alerts.length > 0) {
+      // Confetti burst for correct answer
+      if (window.JSConfetti) {
+        const jsConfetti = new window.JSConfetti();
+        jsConfetti.addConfetti({
+          confettiRadius: 7,
+          confettiNumber: 500,
+        });
+      }
+    }
+  });
+</script>
 {% endblock %} 

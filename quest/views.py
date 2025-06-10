@@ -319,6 +319,7 @@ def take_quest_test(request, result_id):
             if answer.is_correct:
                 quest_progress.correct_answers += 1
                 quest_progress.reveal_next_letter()
+                messages.success(request, "Correct! 🎉")
             else:
                 quest_progress.hide_last_letter()
             quest_progress.save()

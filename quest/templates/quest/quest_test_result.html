@@ -74,7 +74,7 @@
                             {% trans "You've revealed the complete code through your answers." %}
                         </div>
                     {% elif quest_progress.code_guessed %}
-                        <div class="alert alert-info">
+                        <div class="alert alert-info alert-success">
                             <i class="fas fa-key"></i>
                             <strong>{% trans "Code Cracked!" %}</strong>
                             {% trans "You successfully guessed the code." %}
@@ -268,7 +268,6 @@ document.getElementById('codeGuessForm')?.addEventListener('submit', function(e)
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert(data.message);
             location.reload();
         } else {
             alert(data.message);
@@ -280,5 +279,22 @@ document.getElementById('codeGuessForm')?.addEventListener('submit', function(e)
         alert('{% trans "An error occurred. Please try again." %}');
     });
 });
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var alerts = document.querySelectorAll('.alert-success');
+    if (alerts.length > 0) {
+      if (window.JSConfetti) {
+        const jsConfetti = new window.JSConfetti();
+        jsConfetti.addConfetti({
+          confettiRadius: 7,
+          confettiNumber: 500,
+        });
+        }
+      }
+  });
 </script>
 {% endblock %} 
