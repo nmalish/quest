@@ -169,3 +169,202 @@ msgstr "Зображення питання"
 #: my_quest/templates/quest/questions_list.html:20
 msgid "Correct"
 msgstr "Правильно"
+
+#: quest/templates/quest/quest_sequence_list.html:26
+msgid "Quests"
+msgstr "Квести"
+
+#: quest/templates/quest/quest_sequence_list.html:34
+msgid "In Progress"
+msgstr "В процесі"
+
+#: quest/templates/quest/quest_sequence_list.html:38
+msgid "Not Started"
+msgstr "Не розпочато"
+
+#: quest/templates/quest/quest_sequence_list.html:8
+msgid "Quest Sequences"
+msgstr "Послідовності квестів"
+
+#: quest/templates/quest/quest_detail.html:22
+msgid "Code Progress"
+msgstr "Прогрес коду"
+
+#: quest/templates/quest/quest_detail.html:147
+msgid "How It Works"
+msgstr "Як це працює"
+
+#: quest/templates/quest/quest_detail.html:152
+msgid "Each correct answer reveals one letter"
+msgstr "Кожна правильна відповідь відкриває одну літеру"
+
+#: quest/templates/quest/quest_detail.html:156
+msgid "Each wrong answer hides one revealed letter"
+msgstr "Кожна неправильна відповідь приховує одну відкриту літеру"
+
+#: quest/templates/quest/quest_detail.html:160
+msgid "Guess the complete code anytime"
+msgstr "Вгадайте повний код в будь-який час"
+
+#: quest/templates/quest/quest_detail.html:164
+msgid "Unlock the next quest by completing this one"
+msgstr "Розблокуйте наступний квест, завершивши цей"
+
+#: quest/templates/quest/take_quest_test.html:78
+msgid "Complete Test"
+msgstr "Завершити тест"
+
+#: quest/templates/quest/take_quest_test.html:121
+msgid "Your Performance"
+msgstr "Ваша продуктивність"
+
+
+#: quest/templates/quest/take_quest_test.html:131
+msgid "Incorrect"
+msgstr "Неправильно"
+
+#: quest/templates/quest/take_quest_test.html:142
+msgid "Accuracy"
+msgstr "Точність"
+
+#: quest/templates/quest/take_quest_test.html:151
+msgid "Tips"
+msgstr "Поради"
+
+#: quest/templates/quest/take_quest_test.html:156
+msgid "Correct answers reveal letters"
+msgstr "Правильні відповіді відкривають літери"
+
+#: quest/templates/quest/take_quest_test.html:160
+msgid "Wrong answers hide letters"
+msgstr "Неправильні відповіді приховують літери"
+
+#: quest/templates/quest/take_quest_test.html:164
+msgid "Think carefully before answering"
+msgstr "Подумайте уважно перед відповіддю"
+
+#: quest/templates/quest/quest_test_result.html:8
+msgid "Results"
+msgstr "Результати"
+
+#: quest/templates/quest/quest_test_result.html:22
+msgid "Test Completed!"
+msgstr "Тест завершено!"
+
+#: quest/templates/quest/quest_test_result.html:24
+msgid "Test Completed"
+msgstr "Тест завершено"
+
+#: quest/templates/quest/quest_test_result.html:123
+msgid "Your answer"
+msgstr "Ваша відповідь"
+
+#: quest/templates/quest/quest_test_result.html:133
+msgid "Correct answer"
+msgstr "Правильна відповідь"
+
+#: quest/templates/quest/quest_test_result.html:153
+msgid "Guess the Code"
+msgstr "Вгадайте код"
+
+#: quest/templates/quest/quest_test_result.html:156
+msgid "Think you know the code? Guess it now!"
+msgstr "Думаєте, що знаєте код? Спробуйте вгадати зараз!"
+
+#: quest/templates/quest/quest_test_result.html:163
+msgid "Enter code..."
+msgstr "Введіть код..."
+
+#: quest/templates/quest/quest_test_result.html:167
+msgid "Guess Code"
+msgstr "Вгадати код"
+
+#: quest/templates/quest/quest_test_result.html:176
+msgid "What's Next?"
+msgstr "Що далі?"
+
+#: quest/templates/quest/quest_test_result.html:183
+msgid "Next Quest Unlocked!"
+msgstr "Наступний квест розблоковано!"
+
+#: quest/templates/quest/quest_test_result.html:187
+msgid "Continue to Next Quest"
+msgstr "Перейти до наступного квесту"
+
+#: quest/templates/quest/quest_test_result.html:192
+msgid "Sequence Complete!"
+msgstr "Послідовність завершено!"
+
+#: quest/templates/quest/quest_test_result.html:196
+msgid "Back to Sequences"
+msgstr "Назад до послідовностей"
+
+#: quest/templates/quest/quest_test_result.html:201
+msgid "Complete this quest to unlock the next one."
+msgstr "Завершіть цей квест, щоб розблокувати наступний."
+
+#: quest/templates/quest/quest_test_result.html:203
+msgid "Retake Test"
+msgstr "Пройти тест знову"
+
+#: quest/templates/quest/quest_test_result.html:208
+msgid "Back to Sequence"
+msgstr "Назад до послідовності"
+
+#: quest/templates/quest/quest_test_result.html:215
+msgid "Performance Summary"
+msgstr "Підсумок продуктивності"
+
+#: quest/templates/quest/quest_test_result.html:225
+msgid "Accuracy Rate"
+msgstr "Рівень точності"
+
+#: quest/templates/quest/quest_test_result.html:234
+msgid "Letters"
+msgstr "Літери"
+
+#: quest/templates/quest/quest_test_result.html:238
+msgid "Total"
+msgstr "Всього"
+
+msgid "Created"
+msgstr "Створено"
+
+msgid "Enter Quest"
+msgstr "Увійти в квест"
+
+msgid "Choose a quest sequence to begin your coding adventure!"
+msgstr "Оберіть послідовність квестів, щоб розпочати свою пригоду з кодування!"
+
+msgid "Start Quest"
+msgstr "Почати квест"
+
+msgid "Locked"
+msgstr "Заблоковано"
+
+msgid "Quest Tips"
+msgstr "Поради щодо квесту"
+
+msgid "Correct answers reveal code letters"
+msgstr "Правильні відповіді відкривають літери коду"
+
+msgid "Wrong answers hide revealed letters"
+msgstr "Неправильні відповіді приховують відкриті літери"
+
+msgid "Guess the code anytime to unlock next quest"
+msgstr "Вгадайте код у будь-який час, щоб розблокувати наступний квест"
+
+msgid "Complete quests in order"
+msgstr "Виконуйте квести по порядку"
+
+msgid "Progress Summary"
+msgstr "Підсумок прогресу"
+
+msgid "Quests Completed"
+msgstr "Квестів завершено"
+
+msgid "Current Quest"
+msgstr "Поточний квест"
+
+msgid "Code"
+msgstr "Код"
