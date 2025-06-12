@@ -190,6 +190,9 @@
                                     <i class="fas fa-trophy"></i>
                                     <strong>{% trans "Sequence Complete!" %}</strong>
                                 </div>
+                                <a href="{% url 'quest_sequence_completion' quest.sequence.id %}" class="btn btn-success btn-block mb-2">
+                                    <i class="fas fa-medal"></i> {% trans "View Results" %}
+                                </a>
                                 <a href="{% url 'quest_sequence_list' %}" class="btn btn-primary btn-block">
                                     <i class="fas fa-home"></i> {% trans "Back to Sequences" %}
                                 </a>
@@ -268,7 +271,12 @@ document.getElementById('codeGuessForm')?.addEventListener('submit', function(e)
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            location.reload();
+            if (data.sequence_completed && data.redirect_url) {
+                // Sequence completed! Redirect to completion page
+                window.location.href = data.redirect_url;
+            } else {
+                location.reload();
+            }
         } else {
             alert(data.message);
             document.getElementById('guessed_code').value = '';

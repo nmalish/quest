@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load quest_extras %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- Completion Header -->
+            <div class="text-center mb-5">
+                <div class="completion-icon mb-3">
+                    <i class="fas fa-trophy text-warning" style="font-size: 4rem;"></i>
+                </div>
+                <h1 class="display-4 text-success">{% trans "Sequence Completed!" %}</h1>
+                <p class="lead text-muted">{% trans "Congratulations! You have successfully completed all quests in this sequence." %}</p>
+            </div>
+
+            <!-- Sequence Information -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0"><i class="fas fa-compass"></i> {{ sequence.title }}</h3>
+                </div>
+                <div class="card-body">
+                    {% if sequence.description %}
+                        <p class="card-text">{{ sequence.description }}</p>
+                    {% endif %}
+                    
+                    <!-- Completion Statistics -->
+                    <div class="row text-center mt-4">
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <h2 class="display-4 text-success">{{ completed_count }}</h2>
+                                <p class="text-muted">{% trans "Quests Completed" %}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <h2 class="display-4 text-primary">{{ total_count }}</h2>
+                                <p class="text-muted">{% trans "Total Quests" %}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                {% with percent=completed_count|div:total_count|mul:100 %}
+                                <h2 class="display-4 text-warning">{{ percent|floatformat:0 }}%</h2>
+                                <p class="text-muted">{% trans "Completion Rate" %}</p>
+                                {% endwith %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    {% with percent=completed_count|div:total_count|mul:100 %}
+                    <div class="progress mt-4" style="height: 25px;">
+                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" 
+                             role="progressbar" 
+                             style="width: {{ percent|floatformat:0 }}%"
+                             aria-valuenow="{{ percent|floatformat:0 }}" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100">
+                            {{ percent|floatformat:0 }}% {% trans "Complete" %}
+                        </div>
+                    </div>
+                    {% endwith %}
+                </div>
+            </div>
+
+            <!-- Completed Quests List -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="fas fa-check-circle text-success"></i> {% trans "Completed Quests" %}</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for quest in completed_quests %}
+                            {% with qp=quest_progress_map|lookup:quest.id %}
+                            <div class="col-md-6 mb-3">
+                                <div class="quest-completion-item">
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">{{ quest.title }}</h6>
+                                            <small class="text-muted">
+                                                <i class="fas fa-key"></i> {% trans "Code" %}: 
+                                                <code class="code-display-small">{{ quest.code }}</code>
+                                            </small>
+                                            {% if qp and qp.total_answers > 0 %}
+                                                {% with percent=qp.correct_answers|div:qp.total_answers|mul:100 %}
+                                                    <div class="alert alert-info mt-2 mb-0 py-2 px-3 small">
+                                                        {% if percent < 50 %}
+                                                            {% trans "You're already somewhat familiar with Scratch, but you still need to better remember which groups different commands belong to and which command starts the program. Don't worry - everything will work out, just need a little more practice!" %}
+                                                        {% elif percent < 70 %}
+                                                            {% trans "You understand some parts of the topic well, for example, you already know what Scratch commands look like. But you still need to better learn what command groups there are and how the algorithm starts. You're on the right track!" %}
+                                                        {% elif percent < 90 %}
+                                                            {% trans "Well done! You can distinguish command groups well and know how an algorithm is built. There are still a few points to review, but you already know a lot!" %}
+                                                        {% else %}
+                                                            {% trans "Great! You know perfectly well which groups commands belong to in Scratch and how the algorithm starts. You're ready for the next stage! Keep up the good work!" %}
+                                                        {% endif %}
+                                                    </div>
+                                                {% endwith %}
+                                            {% endif %}
+                                        </div>
+                                        <div class="ml-2">
+                                            <i class="fas fa-check-circle text-success"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endwith %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="text-center mb-4">
+                <a href="{% url 'quest_sequence_detail' sequence.id %}" class="btn btn-primary btn-lg mr-3">
+                    <i class="fas fa-eye"></i> {% trans "Review Sequence" %}
+                </a>
+                <a href="{% url 'quest_sequence_list' %}" class="btn btn-outline-secondary btn-lg">
+                    <i class="fas fa-list"></i> {% trans "Browse Other Sequences" %}
+                </a>
+            </div>
+
+            <!-- Completion Message -->
+            <div class="alert alert-success text-center">
+                <h5><i class="fas fa-medal"></i> {% trans "Achievement Unlocked!" %}</h5>
+                <p class="mb-0">{% trans "You've demonstrated excellent problem-solving skills and persistence. Well done!" %}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.completion-icon {
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-30px);
+    }
+    60% {
+        transform: translateY(-15px);
+    }
+}
+
+.stat-card {
+    padding: 20px;
+    margin: 10px 0;
+}
+
+.quest-completion-item {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #28a745;
+}
+
+.quest-number-completed {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: #28a745;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.code-display-small {
+    background-color: #e9ecef;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    letter-spacing: 1px;
+}
+
+.card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.card-header {
+    border-bottom: none;
+}
+</style>
+{% endblock %} 

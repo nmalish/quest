@@ -415,12 +415,67 @@ def guess_code(request, quest_id):
         )
         sequence_progress.unlock_next_quest(quest)
         
-        messages.success(request, f"Congratulations! You've cracked the code: {quest.code}")
-        return JsonResponse({'success': True, 'message': 'Code cracked successfully!'})
+        # Check if sequence is now completed
+        if sequence_progress.is_completed:
+            messages.success(request, f"Congratulations! You've cracked the code: {quest.code}")
+            return JsonResponse({
+                'success': True, 
+                'message': 'Code cracked successfully!',
+                'sequence_completed': True,
+                'redirect_url': f'/quests/sequence/{quest.sequence.id}/completion/'
+            })
+        else:
+            messages.success(request, f"Congratulations! You've cracked the code: {quest.code}")
+            return JsonResponse({'success': True, 'message': 'Code cracked successfully!'})
     else:
         # Incorrect guess
         messages.error(request, "Incorrect code. Keep trying!")
         return JsonResponse({'success': False, 'message': 'Incorrect code. Keep trying!'})
+
+@login_required
+def quest_sequence_completion(request, sequence_id):
+    """Display sequence completion results"""
+    sequence = get_object_or_404(QuestSequence, id=sequence_id, is_active=True)
+    
+    # Get sequence progress
+    sequence_progress = get_object_or_404(
+        SequenceProgress,
+        student=request.user,
+        sequence=sequence
+    )
+    
+    # Verify that the sequence is actually completed
+    if not sequence_progress.is_completed:
+        messages.warning(request, "This sequence is not yet completed.")
+        return redirect('quest_sequence_detail', sequence_id=sequence.id)
+    
+    # Get completed quests
+    completed_quest_ids = sequence_progress.completed_quests
+    completed_quests = Quest.objects.filter(
+        id__in=completed_quest_ids,
+        sequence=sequence
+    ).order_by('order')
+    
+    # Calculate statistics
+    total_quests = sequence.quests.count()
+    completed_count = len(completed_quest_ids)
+    
+    # Get QuestProgress for each completed quest
+    quest_progress_map = {}
+    for quest in completed_quests:
+        qp = QuestProgress.objects.filter(student=request.user, quest=quest).first()
+        quest_progress_map[quest.id] = qp
+    
+    context = {
+        'sequence': sequence,
+        'sequence_progress': sequence_progress,
+        'completed_quests': completed_quests,
+        'completed_count': completed_count,
+        'total_count': total_quests,
+        'quest_progress_map': quest_progress_map,
+    }
+    
+    return render(request, 'quest/quest_sequence_completion.html', context)
 
 @login_required
 def quest_home(request):

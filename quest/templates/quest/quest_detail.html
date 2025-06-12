@@ -204,7 +204,12 @@ document.getElementById('codeGuessForm')?.addEventListener('submit', function(e)
     .then(data => {
         if (data.success) {
             alert(data.message);
-            location.reload();
+            if (data.sequence_completed && data.redirect_url) {
+                // Sequence completed! Redirect to completion page
+                window.location.href = data.redirect_url;
+            } else {
+                location.reload();
+            }
         } else {
             alert(data.message);
             document.getElementById('guessed_code').value = '';

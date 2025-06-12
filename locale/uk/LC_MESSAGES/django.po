@@ -377,3 +377,46 @@ msgstr "Статус коду"
 
 msgid "Answer Review"
 msgstr "Перегляд відповідей"
+
+msgid "Sequence Completed!"
+msgstr "Послідовність завершено!"
+
+msgid "Congratulations! You have successfully completed all quests in this sequence."
+msgstr "Вітаємо! Ви успішно завершили всі квести в цій послідовності."
+
+msgid "Total Quests"
+msgstr "Всього квестів"
+
+msgid "Completion Rate"
+msgstr "Рівень завершення"
+
+msgid "Complete"
+msgstr "Завершено"
+
+msgid "Completed Quests"
+msgstr "Завершені квести"
+
+msgid "Review Sequence"
+msgstr "Переглянути послідовність"
+
+msgid "Browse Other Sequences"
+msgstr "Переглянути інші послідовності"
+
+msgid "Achievement Unlocked!"
+msgstr "Досягнення розблоковано!"
+
+msgid "You've demonstrated excellent problem-solving skills and persistence. Well done!"
+msgstr "Ви продемонстрували відмінні навички розв'язання задач та наполегливість. Молодці!"
+
+# Add personalized feedback messages as translatable strings
+msgid "You're already somewhat familiar with Scratch, but you still need to better remember which groups different commands belong to and which command starts the program. Don't worry - everything will work out, just need a little more practice!"
+msgstr "Ти вже трохи знайомий зі Скретчем, але ще потрібно краще запам'ятати, до яких груп належать різні команди та з якої команди починається програма. Не хвилюйся — все вийде, варто ще трохи потренуватись!"
+
+msgid "You understand some parts of the topic well, for example, you already know what Scratch commands look like. But you still need to better learn what command groups there are and how the algorithm starts. You're on the right track!"
+msgstr "Ти добре розумієш деякі частини теми, наприклад, вже знаєш, як виглядають команди Скретчу. Але ще треба краще вивчити, які бувають групи команд і з чого починається алгоритм. Ти на правильному шляху!"
+
+msgid "Well done! You can distinguish command groups well and know how an algorithm is built. There are still a few points to review, but you already know a lot!"
+msgstr "Молодець! Ти добре розрізняєш групи команд і знаєш, як будується алгоритм. Є ще кілька моментів, які варто повторити, але ти вже багато знаєш!"
+
+msgid "Great! You know perfectly well which groups commands belong to in Scratch and how the algorithm starts. You're ready for the next stage! Keep up the good work!"
+msgstr "Супер! Ти чудово знаєш, до яких груп належать команди в Скретчі та як починається алгоритм. Ти готовий до наступного етапу! Продовжуй у тому ж дусі!"

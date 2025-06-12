@@ -12,6 +12,7 @@ urlpatterns = [
     path('tests/result/<int:result_id>/complete/', views.test_result, name='test_result'),
     path('quests/', views.quest_sequence_list, name='quest_sequence_list'),
     path('quests/sequence/<int:sequence_id>/', views.quest_sequence_detail, name='quest_sequence_detail'),
+    path('quests/sequence/<int:sequence_id>/completion/', views.quest_sequence_completion, name='quest_sequence_completion'),
     path('quests/<int:quest_id>/', views.quest_detail, name='quest_detail'),
     path('quests/<int:quest_id>/start/', views.start_quest_test, name='start_quest_test'),
     path('quests/test/<int:result_id>/', views.take_quest_test, name='take_quest_test'),

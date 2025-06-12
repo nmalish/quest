@@ -117,9 +117,14 @@
                         </div>
                         
                         {% if sequence_progress.is_completed %}
-                            <div class="alert alert-success text-center">
+                            <div class="alert alert-success text-center mb-3">
                                 <i class="fas fa-trophy"></i>
                                 <strong>{% trans "Sequence Completed!" %}</strong>
+                            </div>
+                            <div class="text-center">
+                                <a href="{% url 'quest_sequence_completion' sequence.id %}" class="btn btn-success">
+                                    <i class="fas fa-medal"></i> {% trans "View Results" %}
+                                </a>
                             </div>
                         {% elif sequence_progress.current_quest %}
                             <div class="alert alert-info text-center">
