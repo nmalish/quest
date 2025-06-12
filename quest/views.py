@@ -104,6 +104,7 @@ def take_test(request, result_id):
                 test_result.status = 'COMPLETED'
                 test_result.completed_at = timezone.now()
                 test_result.save()
+                messages.success(request, "Quest completed! 🎉")
                 return redirect('test_result', result_id=result_id)
     
     # Calculate progress
@@ -333,6 +334,7 @@ def take_quest_test(request, result_id):
                 test_result.status = 'COMPLETED'
                 test_result.completed_at = timezone.now()
                 test_result.save()
+                messages.success(request, "Quest completed! 🎉")
                 return redirect('quest_test_result', result_id=result_id)
     
     # Calculate progress
